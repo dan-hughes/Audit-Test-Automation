@@ -2674,6 +2674,7 @@ $WINSStatus = (Get-WindowsFeature -Name WINS).Installed
         @{ "Property" = "DomainRole"; "Values" = "Primary Domain Controller", "Backup Domain Controller" }
     )
     Test = {
+        $OS = Get-CimInstance Win32_OptionalFeature | Select-Object Name
         try {
             $regValue = Get-ItemProperty -ErrorAction Stop `
                 -Path "Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler" `
@@ -2688,12 +2689,24 @@ $WINSStatus = (Get-WindowsFeature -Name WINS).Installed
             }
         }
         catch [System.Management.Automation.PSArgumentException] {
+            if (-not ($OS -match "Server-Gui-Mgmt")) {
+                return @{
+                    Message = "Compliant"
+                    Status = "True"
+                }
+            }
             return @{
                 Message = "Registry value not found."
                 Status = "False"
             }
         }
         catch [System.Management.Automation.ItemNotFoundException] {
+            if (-not ($OS -match "Server-Gui-Mgmt")) {
+                return @{
+                    Message = "Compliant"
+                    Status = "True"
+                }
+            }
             return @{
                 Message = "Registry key not found."
                 Status = "False"
@@ -2713,6 +2726,7 @@ $WINSStatus = (Get-WindowsFeature -Name WINS).Installed
         @{ "Property" = "DomainRole"; "Values" = "Member Server" }
     )
     Test = {
+        $OS = Get-CimInstance Win32_OptionalFeature | Select-Object Name
         try {
             $regValue = Get-ItemProperty -ErrorAction Stop `
                 -Path "Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler" `
@@ -2727,12 +2741,24 @@ $WINSStatus = (Get-WindowsFeature -Name WINS).Installed
             }
         }
         catch [System.Management.Automation.PSArgumentException] {
+            if (-not ($OS -match "Server-Gui-Mgmt")) {
+                return @{
+                    Message = "Compliant"
+                    Status = "True"
+                }
+            }
             return @{
                 Message = "Registry value not found."
                 Status = "False"
             }
         }
         catch [System.Management.Automation.ItemNotFoundException] {
+            if (-not ($OS -match "Server-Gui-Mgmt")) {
+                return @{
+                    Message = "Compliant"
+                    Status = "True"
+                }
+            }
             return @{
                 Message = "Registry key not found."
                 Status = "False"
